@@ -40,7 +40,7 @@ export default function CommunityPage() {
     e.preventDefault();
     if (!currentUser || !newPostContent.trim()) return;
 
-    await fetch('http://localhost:3001/api/posts', {
+    await fetch(`${apiUrl}/api/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -59,7 +59,7 @@ export default function CommunityPage() {
   const handleLike = async (e: React.MouseEvent, postId: string) => {
     e.stopPropagation(); // Empêche d'ouvrir le modal quand on like
     if (!currentUser) return alert("Connectez-vous !");
-    await fetch('http://localhost:3001/api/posts/like', {
+    await fetch(`${apiUrl}/api/posts/like`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: currentUser.id, postId })
