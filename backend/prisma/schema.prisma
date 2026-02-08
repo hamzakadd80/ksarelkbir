@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  ASSOCIATION
+}
+
+enum Category {
+  VETEMENTS
+  SANTE
+  LOGEMENT
+  ALIMENTATION
+  LOGISTIQUE
+  AUTRE
+}
+
+enum NeedStatus {
+  EN_ATTENTE
+  EN_COURS
+  RESOLU
+}
+
+enum OfferStatus {
+  DISPONIBLE
+  RESERVE
+  DISTRIBUE
+}
+
+enum PersonStatus {
+  DISPARU
+  EN_SECURITE
+  RETROUVE
+}
+
+model User {
+  id             String        @id @default(uuid())
+  email          String        @unique
+  passwordHash   String
+  fullName       String
+  phone          String?
+  role           Role          @default(USER)
+  avatarUrl      String?
+  createdAt      DateTime      @default(now())
+  needs          Need[]
+  offers         Offer[]
+  posts          CommunityPost[]
+  reportedPeople PersonAlert[]
+}
+
+model Need {
+  id           String     @id @default(uuid())
+  title        String
+  description  String
+  category     Category
+  urgency      Int
+  contactName  String?
+  status       NeedStatus @default(EN_ATTENTE)
+  locationName String
+  lat          Float?
+  lng          Float?
+  imageUrl     String?
+  contactPhone String?
+  createdAt    DateTime   @default(now())
+  userId       String?
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Offer {
+  id           String      @id @default(uuid())
+  title        String
+  description  String
+  category     Category
+  quantity     String?
+  contactName  String?
+  status       OfferStatus @default(DISPONIBLE)
+  locationName String
+  lat          Float?
+  lng          Float?
+  imageUrl     String?
+  contactPhone String?
+  createdAt    DateTime    @default(now())
+  userId       String?
+  user         User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PersonAlert {
+  id               String       @id @default(uuid())
+  fullName         String
+  age              Int?
+  status           PersonStatus
+  lastSeenLocation String?
+  description      String?
+  imageUrl         String?
+  contactPhone     String
+  createdAt        DateTime     @default(now())
+  reporterId       String
+  reporter         User         @relation(fields: [reporterId], references: [id])
+}
+
+model CommunityPost {
+  id         String   @id @default(uuid())
+  content    String?
+  imageUrl   String?
+  likesCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DangerZone {
+  id          String @id @default(uuid())
+  lat         Float
+  lng         Float
+  radius      Int    @default(500)
+  description String?
+  severity    Int    @default(3)
+}
