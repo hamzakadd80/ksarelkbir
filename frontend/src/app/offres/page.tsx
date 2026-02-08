@@ -109,10 +109,10 @@ export default function OffersPage() {
                 <OfferCard 
                   key={offer.id} 
                   data={{
-                    id: offer.id,
+                    id: offer.id ,
                     title: offer.title,
                     description: offer.description,
-                    category: offer.category,
+                    category: offer.category as any,
                     location: offer.locationName,
                     timeAgo: new Date(offer.createdAt).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }),
                     // Logique pour afficher le nom (Inscrit OU Anonyme)
