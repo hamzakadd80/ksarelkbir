@@ -113,7 +113,7 @@ export default function OffersPage() {
                     title: offer.title,
                     description: offer.description,
                     category: offer.category as any,
-                    status: 'DISPONIBLE',
+                    status: 'Disponible' as any,
                     location: offer.locationName,
                     timeAgo: new Date(offer.createdAt).toLocaleDateString('fr-MA', { day: 'numeric', month: 'short' }),
                     // Logique pour afficher le nom (Inscrit OU Anonyme)
