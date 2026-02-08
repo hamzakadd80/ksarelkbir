@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { OfferService } from '../Services/Offerservice';
+import { OfferService } from '../Services/OfferService';
 
 export class OfferController {
   private offerService: OfferService;

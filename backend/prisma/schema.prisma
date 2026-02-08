@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// --- ENUMS ---
 enum Role {
   USER
   ADMIN
@@ -40,19 +41,27 @@ enum PersonStatus {
   RETROUVE
 }
 
+// --- MODELS ---
+
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
-  passwordHash   String
-  fullName       String
-  phone          String?
-  role           Role          @default(USER)
-  avatarUrl      String?
-  createdAt      DateTime      @default(now())
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  phone        String?
+  role         Role     @default(USER)
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+
+  // Relations existantes
   needs          Need[]
   offers         Offer[]
-  posts          CommunityPost[]
   reportedPeople PersonAlert[]
+
+  // --- NOUVELLES RELATIONS (9asrawa) ---
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
 }
 
 model Need {
@@ -61,16 +70,22 @@ model Need {
   description  String
   category     Category
   urgency      Int
-  contactName  String?
   status       NeedStatus @default(EN_ATTENTE)
+  
   locationName String
   lat          Float?
   lng          Float?
   imageUrl     String?
+  
+  // Contact (Anonyme ou Inscrit)
+  contactName  String?
   contactPhone String?
+  
   createdAt    DateTime   @default(now())
+  
+  // Relation User optionnelle
   userId       String?
-  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Offer {
@@ -79,16 +94,22 @@ model Offer {
   description  String
   category     Category
   quantity     String?
-  contactName  String?
   status       OfferStatus @default(DISPONIBLE)
+  
   locationName String
   lat          Float?
   lng          Float?
   imageUrl     String?
+  
+  // Contact (Anonyme ou Inscrit)
+  contactName  String?
   contactPhone String?
+  
   createdAt    DateTime    @default(now())
+  
+  // Relation User optionnelle
   userId       String?
-  user         User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PersonAlert {
@@ -101,18 +122,57 @@ model PersonAlert {
   imageUrl         String?
   contactPhone     String
   createdAt        DateTime     @default(now())
+  
+  // Celui qui a signalé
   reporterId       String
   reporter         User         @relation(fields: [reporterId], references: [id])
 }
 
-model CommunityPost {
-  id         String   @id @default(uuid())
-  content    String?
-  imageUrl   String?
-  likesCount Int      @default(0)
-  createdAt  DateTime @default(now())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// --- ESPACE COMMUNAUTAIRE (9asrawa) ---
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  
+  // Auteur
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  comments  Comment[]
+  likes     Like[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // --- NOUVEAU : SYSTÈME DE RÉPONSE ---
+  parentId  String?  // ID du commentaire parent (optionnel)
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id]) // Le parent
+  replies   Comment[] @relation("CommentReplies") // Les réponses
+}
+
+model Like {
+  id     String @id @default(uuid())
+  
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Un utilisateur ne peut liker qu'une seule fois un post
+  @@unique([postId, userId])
 }
 
 model DangerZone {
