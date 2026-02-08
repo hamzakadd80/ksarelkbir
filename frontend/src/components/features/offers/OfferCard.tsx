@@ -10,6 +10,7 @@ interface OfferProps {
   timeAgo: string;
   status: 'Disponible' | 'Réservé' | 'Distribué';
   contactName: string;
+  contactPhone?: string | null;
 }
 
 // Fonction pour récupérer l'icône et la couleur du badge catégorie
