@@ -1,6 +1,6 @@
 import { App } from './app';
 
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT as string) || 3001;
 const app = new App();
 
 app.listen(PORT);
