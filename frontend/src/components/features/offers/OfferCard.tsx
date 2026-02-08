@@ -1,6 +1,7 @@
 import { MapPin, Clock, Phone, Shirt, Truck, Home, Baby, Box, MoreHorizontal } from 'lucide-react';
 
 interface OfferProps {
+  id: string;
   category: 'Vêtements' | 'Logistique' | 'Logement' | 'Alimentation' | 'Autre';
   title: string;
   description: string;
