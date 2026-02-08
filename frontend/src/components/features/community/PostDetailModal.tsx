@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { X, Send, User, MessageCircle, Heart, Reply } from 'lucide-react';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 interface PostDetailModalProps {
   isOpen: boolean;
@@ -34,7 +36,7 @@ export default function PostDetailModal({ isOpen, onClose, post, currentUser, on
     if (!commentContent.trim()) return;
 
     try {
-      const res = await fetch('http://localhost:3001/api/posts/comment', {
+      const res = await fetch(`${apiUrl}/api/posts/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

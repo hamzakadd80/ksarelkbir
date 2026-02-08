@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Search, Plus, Loader2, HeartHandshake } from 'lucide-react';
 import AddOfferModal from '../../components/features/offers/AddOfferModal';
 import OfferCard from '../../components/features/offers/OfferCard';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 // Type correspondant à ton API Offres
 interface OfferFromAPI {
@@ -31,7 +33,7 @@ export default function OffersPage() {
   const fetchOffers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/offers');
+      const response = await fetch(`${apiUrl}/api/offers`);
       
       if (!response.ok) {
         throw new Error('Erreur réseau');

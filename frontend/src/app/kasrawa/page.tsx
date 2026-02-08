@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Send, MessageCircle, Heart, User, Loader2, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import PostDetailModal from '../../components/features/community/PostDetailModal'; // <-- IMPORT
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 export default function CommunityPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -27,7 +29,7 @@ export default function CommunityPage() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/posts');
+      const res = await fetch(`${apiUrl}/api/posts`);
       const data = await res.json();
       setPosts(data);
     } catch (error) { console.error(error); } 

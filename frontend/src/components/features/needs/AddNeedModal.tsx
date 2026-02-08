@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { X, Loader2, MapPin, Phone, AlertTriangle, User } from 'lucide-react';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 interface AddNeedModalProps {
   isOpen: boolean;
@@ -33,7 +35,7 @@ export default function AddNeedModal({ isOpen, onClose, onSuccess }: AddNeedModa
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/needs', {
+      const response = await fetch(`${apiUrl}/api/needs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

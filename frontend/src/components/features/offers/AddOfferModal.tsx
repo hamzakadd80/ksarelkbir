@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { X, Loader2, MapPin, Phone, User, HeartHandshake } from 'lucide-react';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
 interface AddOfferModalProps {
   isOpen: boolean;
@@ -32,7 +34,7 @@ export default function AddOfferModal({ isOpen, onClose, onSuccess }: AddOfferMo
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/offers', {
+      const response = await fetch(`${apiUrl}/api/offers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Search, Plus, Loader2, Filter } from 'lucide-react';
 import NeedCard from '../../components/features/needs/NeedCard';
 import AddNeedModal from '../../components/features/needs/AddNeedModal'; // Import du Modal
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 // Définition du type de données qui vient du Backend
 interface NeedFromAPI {
@@ -33,7 +34,7 @@ export default function NeedsPage() {
     try {
       setLoading(true);
       // Appel à ton API Backend
-      const response = await fetch('http://localhost:3001/api/needs');
+      const response = await fetch(`${apiUrl}/api/needs`);
       
       if (!response.ok) {
         throw new Error('Erreur réseau lors de la récupération des besoins');
