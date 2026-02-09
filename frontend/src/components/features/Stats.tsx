@@ -1,23 +1,28 @@
+'use client';
 import { HandHeart, Gift, ShieldCheck } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export default function Stats() {
+  const { t } = useLanguage();
+
   const stats = [
     {
       icon: HandHeart,
       value: "127",
-      label: "Besoins signalés",
+      label: t.stats.needs_reported,
       color: "text-amber-500", // Orange pour l'urgence
     },
     {
       icon: Gift,
       value: "89",
-      label: "Offres d'aide",
+      label: t.stats.offers_given,
       color: "text-[#0f4c81]", // Bleu pour la confiance
     },
     {
       icon: ShieldCheck,
       value: "45",
-      label: "Personnes en sécurité",
+      label: t.stats.people_safe,
       color: "text-emerald-600", // Vert pour la sécurité
     }
   ];
@@ -28,13 +33,13 @@ export default function Stats() {
          md:-mt-16 : Remonte encore plus sur grand écran
       */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 -mt-10 md:-mt-16">
-        
+
         {stats.map((stat, index) => {
           const Icon = stat.icon;
-          
+
           return (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-white rounded-2xl p-8 shadow-xl shadow-slate-200/60 border border-slate-100 flex flex-col items-center text-center transition-transform hover:-translate-y-1 duration-300"
             >
               {/* Icône */}

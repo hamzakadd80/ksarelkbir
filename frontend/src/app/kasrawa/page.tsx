@@ -4,13 +4,16 @@ import { useState, useEffect } from 'react';
 import { Send, MessageCircle, Heart, User, Loader2, Image as ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import PostDetailModal from '../../components/features/community/PostDetailModal'; // <-- IMPORT
+import { useLanguage } from '../../context/LanguageContext';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 
 export default function CommunityPage() {
+  const { t } = useLanguage();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // États formulaire
   const [newPostContent, setNewPostContent] = useState('');
   const [newPostImage, setNewPostImage] = useState(''); // <-- Pour l'image
@@ -32,7 +35,7 @@ export default function CommunityPage() {
       const res = await fetch(`${apiUrl}/api/posts`);
       const data = await res.json();
       setPosts(data);
-    } catch (error) { console.error(error); } 
+    } catch (error) { console.error(error); }
     finally { setLoading(false); }
   };
 
@@ -43,8 +46,8 @@ export default function CommunityPage() {
     await fetch(`${apiUrl}/api/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        userId: currentUser.id, 
+      body: JSON.stringify({
+        userId: currentUser.id,
         content: newPostContent,
         imageUrl: newPostImage || null // <-- Envoi de l'image
       })
@@ -70,9 +73,9 @@ export default function CommunityPage() {
   return (
     <div className="min-h-screen bg-slate-100 py-8">
       {/* --- MODAL --- */}
-      <PostDetailModal 
-        isOpen={!!selectedPost} 
-        onClose={() => setSelectedPost(null)} 
+      <PostDetailModal
+        isOpen={!!selectedPost}
+        onClose={() => setSelectedPost(null)}
         post={selectedPost}
         currentUser={currentUser}
         onUpdate={fetchPosts}
@@ -81,7 +84,7 @@ export default function CommunityPage() {
       <div className="max-w-2xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
           <span className="bg-emerald-500 text-white p-2 rounded-lg">💬</span>
-          9asrawa Community
+          {t.community_page.title}
         </h1>
 
         {/* ZONE PUBLICATION */}
@@ -95,16 +98,16 @@ export default function CommunityPage() {
                 <textarea
                   className="w-full bg-slate-50 p-4 rounded-xl border-none focus:ring-2 focus:ring-emerald-500/20 outline-none resize-none text-slate-900 mb-2"
                   rows={2}
-                  placeholder={`Quoi de neuf, ${currentUser.fullName} ?`}
+                  placeholder={t.community_page.placeholder_post.replace('{name}', currentUser.fullName)}
                   value={newPostContent}
                   onChange={(e) => setNewPostContent(e.target.value)}
                 />
 
                 {/* Input Image (Caché par défaut) */}
                 {showImageInput && (
-                  <input 
+                  <input
                     type="url"
-                    placeholder="Collez le lien de l'image (https://...)"
+                    placeholder={t.community_page.placeholder_image}
                     className="w-full bg-slate-50 p-2 rounded-lg text-sm text-slate-600 mb-3 border border-slate-200 outline-none focus:border-emerald-500"
                     value={newPostImage}
                     onChange={(e) => setNewPostImage(e.target.value)}
@@ -113,17 +116,17 @@ export default function CommunityPage() {
                 )}
 
                 <div className="flex justify-between items-center">
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setShowImageInput(!showImageInput)}
                     className={`flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-lg transition-colors ${showImageInput ? 'bg-emerald-50 text-emerald-600' : 'text-slate-500 hover:bg-slate-50'}`}
                   >
                     <ImageIcon size={18} />
-                    Photo
+                    {t.community_page.btn_photo}
                   </button>
 
                   <button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20">
-                    Publier <Send size={16} />
+                    {t.community_page.btn_publish} <Send size={16} />
                   </button>
                 </div>
               </form>
@@ -131,7 +134,7 @@ export default function CommunityPage() {
           </div>
         ) : (
           <div className="bg-emerald-50 p-6 rounded-2xl mb-8 text-center border border-emerald-100">
-            <Link href="/login" className="text-emerald-600 font-bold hover:underline">Se connecter pour publier</Link>
+            <Link href="/login" className="text-emerald-600 font-bold hover:underline">{t.community_page.login_to_post}</Link>
           </div>
         )}
 
@@ -142,8 +145,8 @@ export default function CommunityPage() {
               const isLiked = currentUser && post.likes.some((like: any) => like.userId === currentUser.id);
 
               return (
-                <div 
-                  key={post.id} 
+                <div
+                  key={post.id}
                   // CLIC SUR LA CARTE OUVRE LE MODAL
                   onClick={() => setSelectedPost(post)}
                   className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
@@ -156,7 +159,7 @@ export default function CommunityPage() {
                     <div>
                       <h3 className="font-bold text-slate-900">{post.user.fullName}</h3>
                       <p className="text-xs text-slate-400">
-                        {new Date(post.createdAt).toLocaleDateString('fr-MA', { day: 'numeric', month: 'long', hour: '2-digit', minute:'2-digit' })}
+                        {new Date(post.createdAt).toLocaleDateString('fr-MA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
@@ -177,17 +180,17 @@ export default function CommunityPage() {
 
                   {/* Actions */}
                   <div className="px-4 py-3 border-t border-slate-50 flex items-center gap-6 mt-2">
-                    <button 
+                    <button
                       onClick={(e) => handleLike(e, post.id)}
                       className={`flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-lg transition-colors hover:bg-slate-50 ${isLiked ? 'text-red-500' : 'text-slate-500'}`}
                     >
                       <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
                       {post.likes.length}
                     </button>
-                    
+
                     <button className="flex items-center gap-2 text-slate-500 text-sm font-bold px-3 py-2 rounded-lg hover:bg-slate-50">
                       <MessageCircle size={20} />
-                      {post.comments.length} commentaires
+                      {post.comments.length} {t.community_page.comments}
                     </button>
                   </div>
                 </div>

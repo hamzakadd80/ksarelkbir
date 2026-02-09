@@ -49,7 +49,7 @@ model User {
   passwordHash String
   fullName     String
   phone        String?
-  role         Role     @default(USER)
+  role      String   @default("USER")
   avatarUrl    String?
   createdAt    DateTime @default(now())
 
