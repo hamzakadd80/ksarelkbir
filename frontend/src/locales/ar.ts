@@ -8,7 +8,7 @@ export const ar = {
         emergency: "طوارئ فيضانات اللوكوس - النجدة : 15",
         home: "الرئيسية",
         map: "الخريطة",
-        community: "المجتمع",
+        community: "قصراوة",
         needs: "احتياجات",
         offers: "عروض",
         login: "تسجيل الدخول",
