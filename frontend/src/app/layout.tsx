@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "../components/features/Header";
 import Footer from "../components/layout/Footer";
 import { LanguageProvider } from "../context/LanguageContext";
+import SplashWrapper from "../components/layout/SplashWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,11 +51,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LanguageProvider>
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <SplashWrapper>
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </SplashWrapper>
         </LanguageProvider>
       </body>
     </html>
